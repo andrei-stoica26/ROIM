@@ -9,3 +9,4 @@ seurats <- mapply(function(folder, ident)
     folders, 
     idents)
 
+doublets <- mapply(predictDoublets, seurats, folders, SIMPLIFY=FALSE)
