@@ -17,4 +17,9 @@ jointReadSeurats <- function(folder, folderPrefix, ident, annotation){
     return(seuratObj)
 }
 
-
+mergeSeurats <- function(seurats, idents, project='orig.ident'){
+    seuratObj <- merge(seurats[[1]], 
+                       seurats[seq(2, length(seurats))],
+                       add.cell.ids=idents,
+                       project=project)
+}
