@@ -23,3 +23,6 @@ doublets <- lapply(folders, function(folder)
     qs_read(paste0(folder, 'DoubletsRNA.qs2')))
 seurats <- mapply(addDoublets, seurats, doublets, SIMPLIFY=FALSE)
 
+seurats <- lapply(seurats, function(seuratObj) removeDoublets(seuratObj, 
+                                                              unitClass))
+seuratObj <- mergeSeurats(seurats, idents)

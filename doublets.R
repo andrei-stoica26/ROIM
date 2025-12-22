@@ -42,3 +42,13 @@ addDoublets <- function(seuratObj, doubletsDF, colStr = 'unitClass'){
     seuratObj[[colStr]] <- factor(x=unitClass, levels=c("singlet", "doublet"))
     return(seuratObj)
 }
+
+removeDoublets <- function(seuratObj, dblColumn){
+    nCells <- ncol(seuratObj)
+    message('Number of cells before filtering: ', nCells, '.')
+    seuratObj <- subset(seuratObj, {{dblColumn}} == 'singlet')
+    message('Number of cells after filtering: ', ncol(seuratObj), '.')
+    perc <- round((1 - ncol(seuratObj) / nCells) * 100, 2)
+    message('Percentage of filtered cells: ', perc, '%.')
+    return(seuratObj)
+}
