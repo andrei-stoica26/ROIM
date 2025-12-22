@@ -13,9 +13,9 @@ predictDoublets <- function(seuratObj, dataset, nRuns = 100, dbr = 0.02, BPPARAM
     }, BPPARAM = BPPARAM)
     doublets <- data.frame(doublets)
     colnames(doublets) <- paste0("unit.class", seq_len(nRuns))
-    fileName <- paste0(dataset, 'Doublets', assay, '.qs')
+    fileName <- paste0(dataset, 'Doublets', assay, '.qs2')
     message(paste0("Saving file: ", fileName, "..."))
-    qsave(doublets, fileName)
+    qs_save(doublets, fileName)
     return(doublets)
 }
 

@@ -9,4 +9,8 @@ seurats <- mapply(function(folder, ident)
     folders, 
     idents)
 
-doublets <- mapply(predictDoublets, seurats, folders, SIMPLIFY=FALSE)
+#doublets <- mapply(predictDoublets, seurats, folders, SIMPLIFY=FALSE)
+doublets <- lapply(folders, function(folder) 
+    qs_read(paste0(folder, 'DoubletsRNA.qs2')))
+seurats <- mapply(addDoublets, seurats, doublets, SIMPLIFY=FALSE)
+
