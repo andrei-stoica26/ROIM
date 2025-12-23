@@ -14,6 +14,13 @@ basicDimRed <- function(seuratObj){
     return(seuratObj)
 }
 
+chooseUMAPDims <- function(seuratObj, reduction, cutoff = 0.1){
+    pct <- seuratObj[[reduction]]@stdev / sum(seuratObj[[reduction]]@stdev) * 100
+    nUMAPDims <- sort(which((pct[1:length(pct) - 1] - pct[2:length(pct)]) > cutoff),
+                      decreasing = TRUE)[1] + 1
+    return(nUMAPDims)
+}
+
 jointUMAP <- function(seuratObj, 
                       useHarmony = TRUE, 
                       cutoff = NULL,

@@ -38,20 +38,14 @@ seuratObj <- jointUMAP(seuratObj)
 qs_save(seuratObj,'preclusteringSeurat.qs2')
 
 seuratObj <- qs_read('preclusteringSeurat.qs2')
-seuratObj <- FindClusters(seuratObj, resolution=3, graph.name='wknn')
-DimPlot(seuratObj, label=TRUE) + NoLegend()
+seuratObj <- FindClusters(seuratObj, resolution=3.6, graph.name='wknn')
+DimPlot(seuratObj, label=TRUE, label.size=2.5) + NoLegend()
 
-v <- clusterMean(seuratObj, 
-                 c('SLC1A3', 'RLBP1','SLITRK2'),
-                 c(7, 13, 23, 9))
-
-miniSeurat <- subset(seuratObj, seurat_clusters==7)
+miniSeurat <- subset(seuratObj, seurat_clusters == 7)
 miniSeurat <- basicDimRed(miniSeurat)
-miniSeurat <- jointUMAP(miniSeurat, FALSE, 0.1)
-DimPlot(miniSeurat)
-
-
-
+miniSeurat <- jointUMAP(miniSeurat, FALSE, cutoff=0.05)
+DimPlot(miniSeurat, group.by='orig.ident', label=TRUE)
+qs_save(miniSeurat, 'MGCSeurat005.qs2')
 
 
 

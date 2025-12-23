@@ -11,9 +11,10 @@ clusterMean <- function(seuratObj, genes, clusters, doNormalize = T){
         colList <- as.list(df)
         maxima <- apply(df, 2, max)
         df <- data.frame(mapply(function(x, y) x / y, colList, maxima))
-        colnames(df) <- genes
     }
+    
     rownames(df) <- clusters
+    colnames(df) <- genes
     
     df$Mean <- rowMeans(df)
     df <- df[order(df$Mean, decreasing = T), ]
