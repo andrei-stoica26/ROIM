@@ -34,7 +34,7 @@ seuratObj <- qs_read('mergedSeurat.qs2')
 seuratObj <- removeRareFeatures(seuratObj, 10, 'RNA')
 seuratObj <- removeRareFeatures(seuratObj, 10, 'ATAC')
 seuratObj <- basicDimRed(seuratObj)
-seuratObj <- jointIntegration(seuratObj)
+seuratObj <- jointUMAP(seuratObj)
 qs_save(seuratObj,'preclusteringSeurat.qs2')
 
 seuratObj <- qs_read('preclusteringSeurat.qs2')
@@ -46,6 +46,10 @@ v <- clusterMean(seuratObj,
                  c(7, 13, 23, 9))
 
 miniSeurat <- subset(seuratObj, seurat_clusters==7)
+miniSeurat <- basicDimRed(miniSeurat)
+miniSeurat <- jointUMAP(miniSeurat, FALSE, 0.1)
+DimPlot(miniSeurat)
+
 
 
 
