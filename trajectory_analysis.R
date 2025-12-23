@@ -38,20 +38,46 @@ print(y - x)
 
 gam <- qs_read('mgcGam.qs2')
 res <- associationTest(gam)
-View(res)
-a <- subset(res, pvalue < 0.05 & meanLogFC > 0.5 & waldStat > 20)
-View(a)
+a <- subset(res, pvalue < 1e-04 & meanLogFC > 0.8 & waldStat > 80)
+sigGenes <- rownames(a)
 
-pseudotime <- slingPseudotime(sce)[, 1]
-ord <- order(pseudotime, na.last = NA)
-sigGenes <- rownames(res)[seq(20)]
+miniSeurat$pseudotimeBin <- cut(miniSeurat$Lineage1, breaks=4)
+DoHeatmap(
+    miniSeurat,
+    features = intersect(sigGenes, VariableFeatures(miniSeurat)),
+    group.by = "pseudotimeBin",
+    label = FALSE
+)
+
+pt <- slingPseudotime(sce)[, 1] 
+ord <- order(pt)
 expr <- log1p(counts(sce)[sigGenes, ord])
 exprScaled <- t(scale(t(expr)))
 
-pheatmap(
-    exprScaled,
-    cluster_cols = FALSE,
-    cluster_rows = TRUE,
-    show_colnames = FALSE,
-    main = "Genes varying along Slingshot pseudotime"
+exprOrdered <- exprScaled[, ord] 
+
+
+genePeak <- apply(exprOrdered, 1, function(gene) {
+    sm <- zoo::rollmean(gene, 3, fill = NA)
+    which.max(sm)
+})
+ordGenes <- order(genePeak)
+exprOrdered <- exprOrdered[ordGenes, ]
+
+
+ha <- HeatmapAnnotation(
+    Pseudotime = pt[ord],
+    col = list(Pseudotime = colorRamp2(c(min(pt), max(pt)), c("blue", "red")))
 )
+
+
+Heatmap(
+    exprOrdered,
+    top_annotation = ha,
+    cluster_columns = FALSE,
+    cluster_rows = FALSE,
+    show_column_names = FALSE,
+    show_row_names = FALSE,
+    column_title = "Genes varying along Slingshot pseudotime"
+)
+
