@@ -19,8 +19,8 @@ p1 <- featureWes(miniSeurat, 'Lineage1', idClass='orig.ident',
                  arrow = arrow(length = unit(0.1, "cm")))
 
 seurats <- SplitObject(miniSeurat, 'orig.ident')
-
 names(seurats)
+#gam <- computeGam(miniSeurat, sce, 'mgcGam')
 gam <- qs_read('mgcGam.qs2')
 res <- associationTest(gam)
 
@@ -52,4 +52,12 @@ p1 <- featureWes(miniSeurat, 'Lineage1', idClass='orig.ident',
     geom_segment(data=df, aes(x=x, y=y, xend=xEnd, yend=yEnd),
                  arrow = arrow(length = unit(0.1, "cm")))
 
-gam <- computeGam(miniSeurat, sce, 'mgcGam_ctrl-24-12-0')
+#gam <- computeGam(miniSeurat, sce, 'mgcGam_ctrl-24-12-0')
+seurats <- SplitObject(miniSeurat, 'orig.ident')
+names(seurats)
+gam <- qs_read('mgcGam_ctrl-24-12-0.qs2')
+res <- associationTest(gam)
+
+w <- createResultsTable(seurats, 
+                        res, 
+                        'Genes associated with pseudotime - Ctrl-24h-12h-0h')
