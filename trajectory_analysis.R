@@ -12,11 +12,13 @@ miniSeurat <- addLineages(miniSeurat, sce)
 mat <- extractLineageMat(sce, 'Lineage1')
 df <- points2Seg(mat)
 p <- singleLineagePlot(miniSeurat, sce, 'Lineage1', 'orig.ident')
+devPlot(p)
 
 p1 <- featureWes(miniSeurat, 'Lineage1', idClass='orig.ident',
                  labelSize=4) + labs(color='Pseudotime') +
     geom_segment(data=df, aes(x=x, y=y, xend=xEnd, yend=yEnd),
                  arrow = arrow(length = unit(0.1, "cm")))
+devPlot(p1)
 
 seurats <- SplitObject(miniSeurat, 'orig.ident')
 names(seurats)
@@ -28,8 +30,10 @@ w <- createResultsTable(seurats,
                         res, 
                         'Genes associated with pseudotime - Ctrl-0h-12h-24h')
 
-featureWes(miniSeurat, 'CRYAB', idClass = 'orig.ident')
-DimPlot(miniSeurat, group.by='orig.ident')
+w <- read.csv('Results/Genes associated with pseudotime - Ctrl-0h-12h-24h.csv')
+colnames(w)[1] <- 'Gene'
+w[, c('pvalue', 'rank', 'Fraction_Maxdif')] <- NULL
+View(w)
 
 #################Second trajectory: Control - 24h - 12h - 0h#####################
 miniSeurat <- qs_read('MGCSeurat005.qs2')
@@ -46,11 +50,13 @@ miniSeurat <- addLineages(miniSeurat, sce)
 mat <- extractLineageMat(sce, 'Lineage1')
 df <- points2Seg(mat)
 p <- singleLineagePlot(miniSeurat, sce, 'Lineage1', 'orig.ident')
+devPlot(p)
 
 p1 <- featureWes(miniSeurat, 'Lineage1', idClass='orig.ident',
                  labelSize=4) + labs(color='Pseudotime') +
     geom_segment(data=df, aes(x=x, y=y, xend=xEnd, yend=yEnd),
                  arrow = arrow(length = unit(0.1, "cm")))
+devPlot(p1)
 
 #gam <- computeGam(miniSeurat, sce, 'mgcGam_ctrl-24-12-0')
 seurats <- SplitObject(miniSeurat, 'orig.ident')
@@ -61,3 +67,8 @@ res <- associationTest(gam)
 w <- createResultsTable(seurats, 
                         res, 
                         'Genes associated with pseudotime - Ctrl-24h-12h-0h')
+
+w <- read.csv('Results/Genes associated with pseudotime - Ctrl-24h-12h-0h.csv')
+colnames(w)[1] <- 'Gene'
+w[, c('pvalue', 'rank', 'Fraction_Maxdif')] <- NULL
+View(w)
