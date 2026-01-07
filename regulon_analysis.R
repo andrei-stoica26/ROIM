@@ -5,6 +5,9 @@ library(tibble)
 library(dplyr)
 library(scLang)
 library(patchwork)
+library(Seurat)
+library(qs2)
+library(Signac)
 
 miniSeurat <- qs_read('MGCSeurat005.qs2')
 
@@ -34,7 +37,23 @@ runMLM <- function(seuratObj, regulons){
     return(seuratObj)
 }
 
-DefaultAssay(seuratObj) <- 'dorothea'
+seurats <- SplitObject(miniSeurat, 'orig.ident')
+regSeurats <- lapply(seq_along(seurats), function(i){
+    message('Running MLM: ', names(seurats)[i], '...')
+    seuratObj <- runMLM(seurats[[i]], net)
+    DefaultAssay(seuratObj) <- 'dorothea'
+    return(seuratObj)
+})
+
+names(regSeurats)
+for (i in seq_along(regSeurats)){
+    expMat <- scExpMat(regSeurats[[i]])
+    df <- data.frame(Regulon = rownames(regSeurats[[i]]),
+                     MeanActivity = rowMeans(expMat))
+    write.csv(df, paste0('regulons', names(seurats)[i], '.csv'), 
+                         row.names=FALSE)
+}
+
 rownames(seuratObj)
 
 featureWes(seuratObj, feature = "HSF1", idClass='orig.ident')
