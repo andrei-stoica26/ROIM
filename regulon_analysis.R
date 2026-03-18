@@ -86,4 +86,4 @@ devPlot(p)
 p <- regPlot(miniSeurat, 'NR2F2', 'PRDM14')
 devPlot(p)
  
-
+ cvv

@@ -14,7 +14,7 @@ runMCA <- function (X, nmcs = 50, features = NULL, reduction.name = "mca",
     cellEmb <- MCA$cellsCoordinates
     stdev <- MCA$stdev
     X <- CelliD:::setDimMCSlot.Seurat(X = X, cellEmb = cellEmb, geneEmb = geneEmb, 
-                      stdev = stdev, reduction.name = reduction.name)
+                      stdev = stdev, reduction.name = reduction.name)v
     DefaultAssay(X) <- InitAssay
     return(X)
 }
@@ -29,6 +29,7 @@ View(df)
 
 genes <- df[seq(90), 1]
 extra <- grep('ENSG0', genes, value=TRUE)
+
 genes <- setdiff(genes, extra)
 length(genes)
 p <- genesDimPlot(miniSeurat, genes, groupBy='orig.ident') + 
@@ -40,4 +41,7 @@ featureWes(miniSeurat, 'TMEM88')
 m <- scExpMat(miniSeurat, genes=genes)
 m <- data.frame(cmdscale(dist(m)))
 p <- densityPlot(m, 'MDS plot - Top highly cell-specific genes', drawNN=FALSE)
+
+
+
 devPlot(p)

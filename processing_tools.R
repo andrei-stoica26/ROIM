@@ -25,7 +25,8 @@ jointUMAP <- function(seuratObj,
                       useHarmony = TRUE, 
                       cutoff = NULL,
                       dimsList = list(1:50, 2:40),
-                      seed = 1){
+                      seed = 1,
+                      ...){
     if (useHarmony){
         seuratObj <- with_seed(seed, 
                                RunHarmony(seuratObj,
@@ -73,7 +74,9 @@ jointUMAP <- function(seuratObj,
         
     }
     
-    seuratObj <- RunUMAP(seuratObj, nn.name = "weighted.nn", verbose=TRUE)
+    seuratObj <- RunUMAP(seuratObj, 
+                         nn.name = "weighted.nn", 
+                         verbose=TRUE, ...)
     DefaultAssay(seuratObj) <- 'RNA'
     return(seuratObj)
 }
