@@ -14,8 +14,9 @@ df <- points2Seg(mat)
 p <- singleLineagePlot(miniSeurat, sce, 'Lineage1', 'orig.ident')
 devPlot(p)
 
-p1 <- featureWes(miniSeurat, 'Lineage1', idClass='orig.ident',
-                 labelSize=4) + labs(color='Pseudotime') +
+p1 <- featurePlot(miniSeurat, 'Lineage1',
+                  palette=paletteer_c("grDevices::Plasma", 30), pointSize=0.8) + 
+    labs(color='Pseudotime') +
     geom_segment(data=df, aes(x=x, y=y, xend=xEnd, yend=yEnd),
                  arrow = arrow(length = unit(0.1, "cm")))
 devPlot(p1)

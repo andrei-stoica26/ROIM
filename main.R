@@ -6,6 +6,8 @@ source('processing_tools.R')
 source('trajectory_analysis_tools.R')
 source('tools.R')
 
+#############################Work in progress###################################
+
 seuratObj <- qs_read('annotatedSeurat.qs2')
 DimPlot(seuratObj, group.by='celltype', label=T, repel=T, label.size=3)
 
@@ -14,15 +16,9 @@ miniSeurat <- removeRareFeatures(miniSeurat, 1)
 miniSeurat <- removeRareFeatures(miniSeurat, 1, 'ATAC')
 miniSeurat <- basicDimRed(miniSeurat)
 miniSeurat <- jointUMAP(miniSeurat, FALSE, 
-                        cutoff=0.005, 
-                        repulsion.strength=0.1, 
-                        spread=0.5)
-DimPlot(miniSeurat, group.by='orig.ident')
+                        cutoff=0.001, 
+                        repulsion.strength=0.001,
+                        spread=0.3)
 
-miniSeurat <- subset(seuratObj, celltype == 'Retinal progenitor cells')
-miniSeurat <- removeRareFeatures(miniSeurat, 1)
-miniSeurat <- removeRareFeatures(miniSeurat, 1, 'ATAC')
-miniSeurat <- basicDimRed(miniSeurat)
-miniSeurat <- jointUMAP(miniSeurat, FALSE, 0.01)
-DimPlot(miniSeurat, group.by='orig.ident')
+
 
