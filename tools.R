@@ -1,13 +1,14 @@
 processSeurat <- function(seuratObj,
-                          assay = 'RNA',
                           minFeatCells = 10,
-                          varsToRegress = NULL){
+                          assay = 'RNA',
+                          varsToRegress = NULL,
+                          cutoff = 0.1){
     seuratObj <- removeRareFeatures (seuratObj, minFeatCells, assay)
     seuratObj <- NormalizeData(seuratObj)
     seuratObj <- FindVariableFeatures(seuratObj)
     seuratObj <- ScaleData(seuratObj, vars.to.regress=varsToRegress)
     seuratObj <- RunPCA(seuratObj)
-    nUMAPDims <- chooseUMAPDims(seuratObj)
+    nUMAPDims <- chooseUMAPDims(seuratObj, 'pca', cutoff)
     message(nUMAPDims, ' PCA dimensions will be used for UMAP.')
     seuratObj <- RunUMAP(seuratObj, dims=seq(nUMAPDims))
     return(seuratObj)

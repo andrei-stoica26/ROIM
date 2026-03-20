@@ -6,7 +6,8 @@ addBasicQCInfo <- function(seuratObj){
     DefaultAssay(seuratObj) <- "ATAC"
     seuratObj <- NucleosomeSignal(seuratObj)
     seuratObj <- TSSEnrichment(seuratObj)
-    seuratObj$blacklistFrac <- FractionCountsInRegion(seuratObj, assay='ATAC', regions=blacklist_hg38_unified)
+    seuratObj$blacklistFrac <- FractionCountsInRegion(seuratObj, assay='ATAC', 
+                                                      regions=blacklist_hg38_unified)
     
     return(seuratObj)
 }
