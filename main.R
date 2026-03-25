@@ -18,8 +18,10 @@ miniSeurat <- basicDimRed(miniSeurat)
 miniSeurat <- jointUMAP(miniSeurat, FALSE, 
                         cutoff=0.005)
 
+#qs_save(miniSeurat, 'mgrpSeurat.qs2')
+miniSeurat <- qs_read('mgrpSeurat.qs2')
+
 DimPlot(miniSeurat, group.by='orig.ident', label=T)
-DimPlot(miniSeurat, group.by='celltype')
 
 sce <- as.SingleCellExperiment(miniSeurat)
 sce <- slingshot(sce,
@@ -32,6 +34,8 @@ miniSeurat <- addLineages(miniSeurat, sce)
 mat <- extractLineageMat(sce, 'Lineage1')
 df <- points2Seg(mat)
 p <- singleLineagePlot(miniSeurat, sce, 'Lineage1', 'orig.ident')
+
+p <- singleLineagePlot(miniSeurat, sce, 'Lineage1', 'celltype', label=FALSE)
 
 p1 <- featureWes(miniSeurat, 'Lineage1', idClass='orig.ident') + 
     labs(color='Pseudotime') +

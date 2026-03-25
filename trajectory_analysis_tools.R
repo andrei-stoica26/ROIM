@@ -10,12 +10,15 @@ points2Seg <- function(mat){
 }
 
 singleLineagePlot <- function(seuratObj, slingshotObj, lineage,
-                              groupBy='celltype', ...){
+                              groupBy='celltype', label=TRUE, 
+                              legend=FALSE, ...){
     mat <- extractLineageMat(slingshotObj, lineage)
     df <- points2Seg(mat)
-    p <- DimPlot(seuratObj, group.by=groupBy, label=TRUE, ...) + NoLegend() +
+    p <- DimPlot(seuratObj, group.by=groupBy, label=label, ...)  +
         geom_segment(data=df, aes(x=x, y=y, xend=xEnd, yend=yEnd),
                      arrow = arrow(length = unit(0.1, "cm")))
+    if (!legend)
+        p <- p + NoLegend()
     p <- henna::centerTitle(p, lineage)
     return(p)
 }
