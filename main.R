@@ -113,6 +113,8 @@ devPlot(p)
 p <- VlnPlot(seuratObj, 'nFeature_RNA', , group.by='celltype') + NoLegend()
 devPlot(p)
 
+print(3)
+
 ################################################################################
 
 DimPlot(miniSeurat, label=TRUE)
