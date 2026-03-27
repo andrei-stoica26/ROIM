@@ -37,3 +37,5 @@ clusterMean <- function(seuratObj, genes, clusters, doNormalize = T){
     df <- round(df, 2)
     return(df)
 }
+
+

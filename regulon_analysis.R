@@ -54,8 +54,7 @@ for (i in seq_along(regSeurats)){
                          row.names=FALSE)
 }
 
-rownames(seuratObj)
-
+seuratObj <- runMLM(miniSeurat, regulons)
 featureWes(seuratObj, feature = "HSF1", idClass='orig.ident')
 
 violinPlot(miniSeurat, feature = "EBF1")
