@@ -113,8 +113,6 @@ devPlot(p)
 p <- VlnPlot(seuratObj, 'nFeature_RNA', , group.by='celltype') + NoLegend()
 devPlot(p)
 
-print(3)
-
 ################################################################################
 
 DimPlot(miniSeurat, label=TRUE)
@@ -129,6 +127,13 @@ miniSeurat <- basicDimRed(miniSeurat)
 miniSeurat <- jointUMAP(miniSeurat, FALSE, cutoff=0.005)
 
 p <- DimPlot(miniSeurat, label=TRUE, group.by='orig.ident')
+devPlot(p)
+
+###############################################################################
+miniSeurat <- qs_read('MGCSeurat005.qs2')
+p <- DimPlot(miniSeurat, group.by='orig.ident')
+devPlot(p)
+p <- FeaturePlot(miniSeurat, 'EYS')
 devPlot(p)
 
 ################################################################################

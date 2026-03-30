@@ -2,15 +2,27 @@ processSeurat <- function(seuratObj,
                           minFeatCells = 10,
                           assay = 'RNA',
                           varsToRegress = NULL,
-                          cutoff = 0.1){
+                          cutoff = 0.1,
+                          useHarmony=FALSE){
     seuratObj <- removeRareFeatures (seuratObj, minFeatCells, assay)
     seuratObj <- NormalizeData(seuratObj)
     seuratObj <- FindVariableFeatures(seuratObj)
     seuratObj <- ScaleData(seuratObj, vars.to.regress=varsToRegress)
     seuratObj <- RunPCA(seuratObj)
-    nUMAPDims <- chooseUMAPDims(seuratObj, 'pca', cutoff)
-    message(nUMAPDims, ' PCA dimensions will be used for UMAP.')
-    seuratObj <- RunUMAP(seuratObj, dims=seq(nUMAPDims))
+    if (useHarmony){
+        seuratObj <- RunHarmony(seuratObj, group.by.vars = 'orig.ident',
+                                assay.use = 'RNA')
+        nUMAPDims <- chooseUMAPDims(seuratObj, reduction="harmony", cutoff)
+        message(nUMAPDims, ' harmony dimensions will be used for UMAP.')
+        seuratObj <- RunUMAP(seuratObj, dims=seq(nUMAPDims), 
+                             reduction="harmony")
+        
+    } else {
+        nUMAPDims <- chooseUMAPDims(seuratObj, 'pca', cutoff)
+        message(nUMAPDims, ' PCA dimensions will be used for UMAP.')
+        seuratObj <- RunUMAP(seuratObj, dims=seq(nUMAPDims))
+    }
+    
     return(seuratObj)
 }
 
