@@ -48,7 +48,7 @@ jointUMAP <- function(seuratObj,
             umapDimsATAC <- chooseUMAPDims(seuratObj, reduction="harmony_atac",
                                            cutoff)
             message('Using ', umapDimsRNA, ' dimensions for RNA and ',
-                    umapDimsATAC, ' dimensions for ATAC.')
+                    umapDimsATAC - 1, ' dimensions for ATAC.')
             dimsList <- list(seq(umapDimsRNA),
                              seq(2, umapDimsATAC))
         }
