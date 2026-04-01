@@ -1,4 +1,8 @@
-annotation <- GetGRangesFromEnsDb(ensdb = EnsDb.Hsapiens.v86)
+library(AnnotationHub)
+ah <- AnnotationHub()
+query(ah, "EnsDb.Hsapiens.v110")  
+ensdb_v110 <- ah[["AH113665"]]  
+annotation <- GetGRangesFromEnsDb(ensdb = ensdb_v110)
 seqlevels(annotation) <- paste0('chr', seqlevels(annotation))
 
 folders <- paste0('sc-', c('0', '12', '24', 'ctr'))
