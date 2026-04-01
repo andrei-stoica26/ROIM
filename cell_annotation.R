@@ -1,6 +1,6 @@
 seuratObj <- qs_read('preclusteringSeurat.qs2')
 seuratObj <- FindClusters(seuratObj, resolution=3.6, graph.name='wknn')
-DimPlot(seuratObj, label=TRUE, label.size=3) + NoLegend()
+DimPlot(seuratObj, label=TRUE, label.size=3)
 
 seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                  list(c(0, 1, 8, 28, 32, 16, 17, 31, 35, 10),

@@ -12,16 +12,20 @@ addBasicQCInfo <- function(seuratObj){
     return(seuratObj)
 }
 
-basicQC <- function(seuratObj, cutoffs = c(1000, 1200, 20, 0.02, 1, 2)){
+basicQC <- function(seuratObj, 
+                    cutoffs = c(1000, 1200, 15, 0.01, 3, 2, 500, 1000)){
     nCells <- ncol(seuratObj)
     message('Number of cells before filtering: ', nCells, '.')
-    seuratObj <- subset(seuratObj, 
-                        nCount_RNA >= cutoffs[1] & 
-                            nCount_ATAC >= cutoffs[2] &
-                            percent.mt < cutoffs[3] &
-                            blacklistFrac < cutoffs[4] &
-                            TSS.enrichment > cutoffs[5] &
-                            nucleosome_signal < cutoffs[6]
+    seuratObj <- subset(
+        seuratObj, 
+        nCount_RNA >= cutoffs[1] &
+            nCount_ATAC >= cutoffs[2] &
+            percent.mt < cutoffs[3] &
+            blacklistFrac < cutoffs[4] &
+            TSS.enrichment > cutoffs[5] &
+            nucleosome_signal < cutoffs[6] &        
+            nFeature_RNA >= cutoffs[7] &
+            nFeature_ATAC >= cutoffs[8]
     )
     message('Number of cells after filtering: ', ncol(seuratObj), '.')
     perc <- round((1 - ncol(seuratObj) / nCells) * 100, 2)
