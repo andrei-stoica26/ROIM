@@ -21,15 +21,11 @@ chooseUMAPDims <- function(seuratObj, reduction, cutoff = 0.1){
     return(nUMAPDims)
 }
 
-cutoffVlnPlot <- function(seuratObj, col, cutoff, color='blue', linewidth=0.5)
-    return(VlnPlot(seuratObj, col) + 
-               geom_hline(yintercept=cutoff, color=color, linewidth=linewidth))
-
 jointUMAP <- function(seuratObj, 
                       useHarmony = TRUE, 
                       cutoff = NULL,
                       dimsList = list(1:50, 2:40),
-                      seed = 1,
+                      seed = 20,
                       ...){
     if (useHarmony){
         seuratObj <- with_seed(seed, 

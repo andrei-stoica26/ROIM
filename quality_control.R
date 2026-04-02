@@ -12,6 +12,10 @@ addBasicQCInfo <- function(seuratObj){
     return(seuratObj)
 }
 
+cutoffVlnPlot <- function(seuratObj, col, cutoff, color='blue', linewidth=0.5)
+    return(VlnPlot(seuratObj, col) + 
+               geom_hline(yintercept=cutoff, color=color, linewidth=linewidth))
+
 basicQC <- function(seuratObj, 
                     cutoffs = c(1000, 1200, 15, 0.01, 3, 2, 500, 1000)){
     nCells <- ncol(seuratObj)
