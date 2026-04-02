@@ -8,3 +8,4 @@ source('tools.R')
 
 cutoffVlnPlot(seurats[[4]], 'percent.mt', 15)
 DimPlot(seuratObj)
+ElbowPlot(seuratObj, reduction='harmony_atac')

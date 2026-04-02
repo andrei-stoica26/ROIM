@@ -25,7 +25,8 @@ jointUMAP <- function(seuratObj,
                       useHarmony = TRUE, 
                       cutoff = NULL,
                       dimsList = list(1:50, 2:40),
-                      seed = 20,
+                      seed = v
+                      ,
                       ...){
     if (useHarmony){
         seuratObj <- with_seed(seed, 
@@ -42,16 +43,6 @@ jointUMAP <- function(seuratObj,
                                           reduction.save = 'harmony_atac',
                                           assay.use = 'ATAC',
                                           project.dim = FALSE))
-        if (!is.null(cutoff)){
-            umapDimsRNA <- chooseUMAPDims(seuratObj, reduction="harmony_rna",
-                                          cutoff)
-            umapDimsATAC <- chooseUMAPDims(seuratObj, reduction="harmony_atac",
-                                           cutoff)
-            message('Using ', umapDimsRNA, ' dimensions for RNA and ',
-                    umapDimsATAC - 1, ' dimensions for ATAC.')
-            dimsList <- list(seq(umapDimsRNA),
-                             seq(2, umapDimsATAC))
-        }
         
         seuratObj <- FindMultiModalNeighbors(seuratObj,
                                              reduction.list=list('harmony_rna',
