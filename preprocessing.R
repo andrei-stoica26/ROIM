@@ -39,7 +39,7 @@ seuratObj <- removeRareFeatures(seuratObj, 10, 'RNA')
 seuratObj <- removeRareFeatures(seuratObj, 10, 'ATAC')
 seuratObj <- basicDimRed(seuratObj)
 seuratObj <- jointUMAP(seuratObj)
-qs_save(seuratObj,'preclusteringSeurat.qs2')
+qs_save(seuratObj,'preclusteringSeuratFull.qs2')
 
 seuratObj <- qs_read('preclusteringSeurat.qs2')
 seuratObj <- FindClusters(seuratObj, resolution=3.6, graph.name='wknn')

@@ -27,10 +27,8 @@ processSeurat <- function(seuratObj,
 }
 
 clusterMean <- function(seuratObj, genes, clusters, doNormalize = T){
-    message('Filtering expression matrix...')
     expression <- as.matrix(LayerData(seuratObj, layer='data')[genes, ])
     df <- data.table::transpose(data.frame(lapply(clusters, function(x){
-        message('Assesing mean expression of selected genes in cluster ', x, '...')
         clusterExp <- expression[, which(seuratObj$seurat_clusters == x), drop=FALSE]
         return(rowMeans(clusterExp))
     })))

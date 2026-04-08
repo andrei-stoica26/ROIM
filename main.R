@@ -6,6 +6,3 @@ source('processing_tools.R')
 source('trajectory_analysis_tools.R')
 source('tools.R')
 
-cutoffVlnPlot(seurats[[4]], 'percent.mt', 15)
-DimPlot(seuratObj)
-ElbowPlot(seuratObj, reduction='harmony_atac')

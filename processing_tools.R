@@ -24,9 +24,8 @@ chooseUMAPDims <- function(seuratObj, reduction, cutoff = 0.1){
 jointUMAP <- function(seuratObj, 
                       useHarmony = TRUE, 
                       cutoff = NULL,
-                      dimsList = list(1:50, 2:40),
-                      seed = v
-                      ,
+                      dimsList = list(1:45, 2:35),
+                      seed = 20,
                       ...){
     if (useHarmony){
         seuratObj <- with_seed(seed, 
