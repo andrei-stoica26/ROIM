@@ -19,6 +19,8 @@ seuratObj <- basicDimRed(seuratObj)
 seuratObj <- jointUMAP(seuratObj)
 qs_save(seuratObj,'preclusteringSeurat.qs2')
 
+################################################################################
+
 seuratObj <- qs_read('preclusteringSeurat.qs2')
 seuratObj <- FindClusters(seuratObj, resolution=4, graph.name='wknn')
 DimPlot(seuratObj, label=T) + NoLegend()
@@ -75,4 +77,22 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'ATF5/UNC5B/GBE1',
                                    'NEUROD6/NEUROD2/POU3F3'))
 
+qs_save(seuratObj, 'annotatedSeurat.qs2')
+
 DimPlot(seuratObj, label=T, repel=T, label.size=3, group.by='celltype') + NoLegend()
+
+miniSeurat <- subset(seuratObj, celltype=='Muller glial cells')
+miniSeurat <- processSeurat(miniSeurat, 1)
+miniSeurat <- FindNeighbors(miniSeurat, reduction='umap', dims=1:2)
+miniSeurat <- FindClusters(miniSeurat, resolution=0.1)
+qs_save(miniSeurat, 'miniSeurat.qs2')
+
+microSeurat <- subset(miniSeurat, seurat_clusters != 4)
+microSeurat <- removeRareFeatures(microSeurat, 1)
+microSeurat <- removeRareFeatures(microSeurat, 1, 'ATAC')
+microSeurat <- basicDimRed(microSeurat)
+microSeurat <- jointUMAP(microSeurat, FALSE, 0.001)
+qs_save(microSeurat, 'microSeurat.qs2')
+
+microSeurat <- qs_read('microSeurat.qs2')
+DimPlot(microSeurat, group.by='orig.ident', label=TRUE)
