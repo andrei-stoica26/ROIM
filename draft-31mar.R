@@ -1,5 +1,3 @@
-#############################Work in progress###################################
-
 seuratObj <- qs_read('annotatedSeurat.qs2')
 p <- DimPlot(seuratObj, group.by='celltype', label=T, repel=T, label.size=3) + 
     NoLegend() + ggtitle('Cell type annotation')
