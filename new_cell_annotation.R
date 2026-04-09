@@ -85,8 +85,10 @@ miniSeurat <- subset(seuratObj, celltype=='Muller glial cells')
 miniSeurat <- removeRareFeatures(miniSeurat, 1)
 miniSeurat <- removeRareFeatures(miniSeurat, 1, 'ATAC')
 miniSeurat <- basicDimRed(miniSeurat)
-miniSeurat <- jointUMAP(miniSeurat, FALSE)
+miniSeurat <- jointUMAP(miniSeurat, FALSE, cutoff=0.05)
 qs_save(miniSeurat, 'miniSeurat.qs2')
+
+DimPlot(miniSeurat, group.by='orig.ident', label=TRUE)
 
 
 

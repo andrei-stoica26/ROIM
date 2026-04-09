@@ -2,8 +2,9 @@ library(ggalluvial)
 library(scLang)
 library(hammers)
 
-df <- scColPairPercs(seuratObj, 'orig.ident', 'celltype')
+seuratObj <- qs_read('annotatedSeurat.qs2')
 
+df <- scColPairPercs(seuratObj, 'orig.ident', 'celltype')
 p <- ggplot(df, aes(x=orig.ident, 
                     y=perc, 
                     fill=celltype, 
@@ -17,5 +18,11 @@ p <- ggplot(df, aes(x=orig.ident,
 df <- repAnalysis(seuratObj, 'orig.ident', 'celltype')
 pvalRiverPlot(df)
 
-VlnPlot(miniSeurat, 'WIF1')
+df <- scColPairRatio(seuratObj, 'orig.ident', 'celltype')
+df <- df[, c(1, 2, 6)]
+tilePlot(df, doMelt=FALSE, showNumbers=FALSE, palette='Plasma', reverseColors=FALSE, 
+         legendTitle='Observed over\nexpected ratio')
+
+
+
 
