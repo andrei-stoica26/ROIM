@@ -82,17 +82,15 @@ qs_save(seuratObj, 'annotatedSeurat.qs2')
 DimPlot(seuratObj, label=T, repel=T, label.size=3, group.by='celltype') + NoLegend()
 
 miniSeurat <- subset(seuratObj, celltype=='Muller glial cells')
-miniSeurat <- processSeurat(miniSeurat, 1)
-miniSeurat <- FindNeighbors(miniSeurat, reduction='umap', dims=1:2)
-miniSeurat <- FindClusters(miniSeurat, resolution=0.1)
+miniSeurat <- removeRareFeatures(miniSeurat, 1)
+miniSeurat <- removeRareFeatures(miniSeurat, 1, 'ATAC')
+miniSeurat <- basicDimRed(miniSeurat)
+miniSeurat <- jointUMAP(miniSeurat, FALSE)
 qs_save(miniSeurat, 'miniSeurat.qs2')
 
-microSeurat <- subset(miniSeurat, seurat_clusters != 4)
-microSeurat <- removeRareFeatures(microSeurat, 1)
-microSeurat <- removeRareFeatures(microSeurat, 1, 'ATAC')
-microSeurat <- basicDimRed(microSeurat)
-microSeurat <- jointUMAP(microSeurat, FALSE, 0.001)
-qs_save(microSeurat, 'microSeurat.qs2')
 
-microSeurat <- qs_read('microSeurat.qs2')
-DimPlot(microSeurat, group.by='orig.ident', label=TRUE)
+
+
+
+
+

@@ -17,5 +17,5 @@ p <- ggplot(df, aes(x=orig.ident,
 df <- repAnalysis(seuratObj, 'orig.ident', 'celltype')
 pvalRiverPlot(df)
 
-
+VlnPlot(miniSeurat, 'WIF1')
 
