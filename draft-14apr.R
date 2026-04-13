@@ -182,62 +182,11 @@ FeaturePlot(miniSeurat, 'Lineage1')
 
 ################################################################################
 
-psDF <- miniSeurat[['Lineage1']]
-psDF <- psDF[order(psDF$Lineage1), drop=FALSE, ]
-View(psDF)
-
 gam <- qs_read('mgcGam.qs2')
 res <- associationTest(gam)
-topRes <- subset(res, pvalue < 0.05 & meanLogFC >= 2 & waldStat >= 100)
+topRes <- subset(res, pvalue < 0.05 & meanLogFC >= 2 & waldStat >= 150)
 genes <- rownames(topRes)
+p <- contExpHeatmap(miniSeurat, genes)
+p <- centerTitle(p, 'Genes strongly varying along pseudotime')
+devPlot(p)
 
-mat <- scExpMat(miniSeurat, genes=genes)
-mat <- mat[, rownames(psDF)]
-df <- reshape2::melt(mat)
-colnames(df) <- c('Gene', 'Cell', 'Expression')
-
-breaks <- colnames(mat)[seq(1, dim(mat)[2], length.out=10)]
-labels <- round(seq(0, max(psDF), length.out=10), 2)
-
-p <- ggplot() + geom_tile(data=df, mapping=aes(x=Cell, y=Gene, fill=Expression)) +
-    scale_fill_viridis() +
-    scale_x_discrete(breaks=breaks, labels=labels) +
-    labs(x='Pseudotime', y=NULL, fill='Expression level')
-
-featureWes(miniSeurat, 'FTL', idClass='orig.ident')
-
-featureWes(miniSeurat, 'Lineage1', idClass='orig.ident')
-
-################################################################################
-
-genes <- c('NFIA', 'NFIX', 'SOX2', 'LHX2', 'HMGA1', 'ASCL1', 'SMARCA5', 'YAP1',
-           'SOX9', 'STAT3', 'E2F3', 'FOXN4', 'MYB', 'FOXO3', 'SOX5', 'NFIB')
-mat <- scExpMat(miniSeurat, genes=genes)
-#mat <- cluster_matrix(mat)
-df <- reshape2::melt(mat)
-View(df)
-levels(df$Var1) <- rev(genes)
-breaks <- colnames(mat)[seq(1, dim(mat)[2], length.out=10)]
-labels <- round(seq(0, max(psDF), length.out=10), 2)
-
-groupDF <- data.frame(Var1=genes, Group=c(rep('Rest', 4),
-                                          rep('Reactivity', 6),
-                                          rep('Proliferation', 3),
-                                          rep('Restore rest', 3)))
-levels(groupDF$Var1) <- rev(genes)
-
-groupPlot <- ggplot() +
-    geom_tile(data=groupDF,aes(x=1, y=Var1, fill=Group), width=1) +
-    scale_fill_manual(name = "Group", values=wes_palette("GrandBudapest1")) +
-    easy_remove_axes() + NoLegend() + theme(plot.margin=margin(0, 0, 0, 20))
-
-heatPlot <- ggplot() + geom_tile(data=df, mapping=aes(x=Var2, y=Var1, fill=value)) +
-    scale_fill_viridis() +
-    scale_x_discrete(breaks=breaks, labels=labels) +
-    labs(x='Pseudotime', y=NULL, fill='Expression level')
-
-p7 <- (groupPlot + heatPlot + plot_layout(widths = c(0.02, 1)))
-
-VlnPlot(miniSeurat, 'NFIB', group.by='orig.ident')
-
-featureWes(miniSeurat, 'FTL', idClass='orig.ident')
