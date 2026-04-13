@@ -63,41 +63,6 @@ computeGam <- function(seuratObj, sce, fileName){
     return(gam)
 }
 
-pseudotimeHeatmapPlot <- function(sce, sigGenes){
-    pt <- slingPseudotime(sce)[, 1] 
-    ord <- order(pt)
-    expr <- log1p(counts(sce)[sigGenes, ord])
-    exprScaled <- t(scale(t(expr)))
-    exprOrdered <- exprScaled[, ord] 
-    
-    genePeak <- apply(exprOrdered, 1, function(gene) {
-        sm <- zoo::rollmean(gene, 3, fill = NA)
-        which.max(sm)
-    })
-    ordGenes <- order(genePeak)
-    exprOrdered <- exprOrdered[ordGenes, ]
-    ptOrdered <- pt[colnames(exprOrdered)]
-    
-    colFun <- colorRamp2(
-        breaks = c(-1, 4),  
-        colors = c('magenta4', 'gold')
-    )
-    
-    h <- Heatmap(
-        exprOrdered,
-        name = 'Expression',
-        col = colFun,
-        cluster_columns = FALSE,
-        cluster_rows = FALSE,
-        show_column_names = FALSE,
-        show_row_names = TRUE,
-        row_names_gp = gpar(fontsize = 7),
-        column_title = "Genes varying along pseudotime - Ctrl-0h-12h-24 trajectory"
-    )
-    
-    return(h)
-}
-
 createResultsTable <- function(seurats, res, fileName){
     sigRes <- subset(res, pvalue < 1e-2)
     sigRes$df <- c()
