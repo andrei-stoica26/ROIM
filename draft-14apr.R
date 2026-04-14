@@ -95,16 +95,43 @@ gam <- computeGam(miniSeurat, sce, 'mgcGam')
 
 gam <- qs_read('mgcGam.qs2')
 res <- associationTest(gam)
-topRes <- subset(res, pvalue < 0.05 & meanLogFC >= 2 & waldStat >= 100)
+topRes <- subset(res, pvalue < 0.05 & meanLogFC >= 2 & waldStat >= 150)
 
-p <- pseudotimeHeatmapPlot(sce, rownames(topRes))
+seurats <- SplitObject(miniSeurat, 'orig.ident')
 
+
+
+w <- w[order(w$meanLogFC, decreasing=T), ]
 
 p <- featureWes(miniSeurat, 'HSPA6', idClass='orig.ident')
 devPlot(p)
 
+p <- featureWes(miniSeurat, 'HSPH1', idClass='orig.ident')
+devPlot(p)
 
+p <- featureWes(miniSeurat, 'FTL', idClass='orig.ident')
+devPlot(p)
 
+w <- createResultsTable(seurats, 
+                        res, 
+                        'Genes associated with pseudotime.csv')
+w <- w[order(w$waldStat, decreasing=T), ]
+genes <- rownames(w)[seq(30)]
+p <- featureWes(miniSeurat, genes[4], idClass='orig.ident')
+devPlot(p)
+invisible(lapply(genes, message))
+m <- genesER(genes, 'human')
+p <- newCnetplot(m)
+devPlot(p)
+
+w <- w[order(w$meanLogFC, decreasing=T), ]
+genes <- rownames(w)[seq(30)]
+p <- featureWes(miniSeurat, genes[2], idClass='orig.ident')
+devPlot(p)
+p <- featureWes(miniSeurat, 'PNLDC1', idClass='orig.ident')
+devPlot(p)
+
+################################################################################
 
 
 seuratObj$celltype <- factor(seuratObj$celltype, 
@@ -185,8 +212,38 @@ FeaturePlot(miniSeurat, 'Lineage1')
 gam <- qs_read('mgcGam.qs2')
 res <- associationTest(gam)
 topRes <- subset(res, pvalue < 0.05 & meanLogFC >= 2 & waldStat >= 150)
+View(topRes)
 genes <- rownames(topRes)
 p <- contExpHeatmap(miniSeurat, genes)
 p <- centerTitle(p, 'Genes strongly varying along pseudotime')
 devPlot(p)
 
+genes <- c('NFIA', 'NFIX', 'SOX2', 'LHX2', 'HMGA1', 'ASCL1', 'SMARCA5', 'YAP1',
+           'SOX9', 'STAT3', 'E2F3', 'FOXN4', 'MYB', 'FOXO3', 'SOX5', 'NFIB')
+p <- contExpHeatmap(miniSeurat, genes)
+p <- centerTitle(p, 'Selected genes along pseudotime')
+devPlot(p)
+
+x <- 13
+p <- featureWes(miniSeurat, 'EGFLAM', idClass='orig.ident')
+devPlot(p)
+p <- featureWes(miniSeurat, 'PEX5L', idClass='orig.ident')
+devPlot(p)
+invisible(lapply(genes, message))
+
+
+m <- genesER(genes, 'human')
+View(m@result)
+
+topRes <- subset(res, pvalue < 0.05 & meanLogFC >= 2 & waldStat >= 100)
+genes <- rownames(topRes)
+m <- genesER(genes, 'human')
+invisible(lapply(genes, message))
+
+
+
+p <- newCnetplot(m)
+devPlot(p)
+
+activityMat <- GeneActivity(miniSeurat, assay='ATAC')
+qs_save(activityMat, 'miniSeuratGeneActivity.qs2')
