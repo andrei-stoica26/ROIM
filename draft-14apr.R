@@ -124,12 +124,21 @@ m <- genesER(genes, 'human')
 p <- newCnetplot(m)
 devPlot(p)
 
+p <- contExpHeatmap(miniSeurat, genes)
+p <- centerTitle(p, 'Genes with high waldStat')
+devPlot(p)
+
 w <- w[order(w$meanLogFC, decreasing=T), ]
 genes <- rownames(w)[seq(30)]
 p <- featureWes(miniSeurat, genes[2], idClass='orig.ident')
 devPlot(p)
 p <- featureWes(miniSeurat, 'PNLDC1', idClass='orig.ident')
 devPlot(p)
+
+p <- contExpHeatmap(miniSeurat, genes)
+p <- centerTitle(p, 'Genes with high meanLogFC')
+devPlot(p)
+    
 
 ################################################################################
 
@@ -197,8 +206,6 @@ miniSeurat <- addLineages(miniSeurat, sce)
 genes <- c('NFIA', 'NFIX', 'SOX2', 'LHX2', 'HMGA1', 'ASCL1', 'SMARCA5', 'YAP1',
            'SOX9', 'STAT3', 'E2F3', 'FOXN4', 'MYB', 'FOXO3', 'SOX5', 'NFIB')
 
-p <- pseudotimeHeatmapPlot(sce, genes)
-
 
 p7 <- centerTitle(p7, "Expression of selected genes along pseudotime")
 devPlot(p7)
@@ -247,3 +254,6 @@ devPlot(p)
 
 activityMat <- GeneActivity(miniSeurat, assay='ATAC')
 qs_save(activityMat, 'miniSeuratGeneActivity.qs2')
+
+featureWes(miniSeurat, 'RLBP1')
+DimPlot(miniSeurat, group.by='orig.ident')
