@@ -84,7 +84,6 @@ df$celltype <- factor(df$celltype,
                                'ONECUT1+ horizontal cells',
                                'RPE cells')))
 
-
 p <- ggplot(df, aes(x = orig.ident, y = celltype, label = significant)) +
     geom_tile(aes(fill = value), color="white", linewidth=0.5) +
     geom_text(color = "black") + 
