@@ -1,12 +1,12 @@
-contExpHeatmap <- function(seuratObj, 
+contExpHeatmap <- function(scObj, 
                            genes,
                            colStr='Lineage1', 
                            xLab='Pseudotime',
                            fillLab='Expression level'){
-    contDF <- metadataDF(seuratObj)[, colStr, drop=FALSE]
+    contDF <- metadataDF(scObj)[, colStr, drop=FALSE]
     contDF <- contDF[order(contDF[[colStr]]), drop=FALSE, ]
     
-    mat <- scExpMat(seuratObj, genes=rev(genes))
+    mat <- scExpMat(scObj, genes=rev(genes))
     mat <- mat[, rownames(contDF)]
     df <- reshape2::melt(mat)
     colnames(df) <- c('Gene', 'Cell', 'Expression')
