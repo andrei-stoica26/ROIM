@@ -59,7 +59,14 @@ v <- clusterMean(seuratObj,
 View(v)
 
 w <- clusterMean(seuratObj, 
-                 c('RLBP1', 'TF'),
+                 c('SOX2', 'SLC1A3', 'CD44', 'SLITRK2', 'COL4A2'),
                  c(43, 2, 17, 21, 24, 14, 42, 45, 19, 30, 5, 10, 15, 33, 9, 25, 23, 46, 27, 34))
 View(w)
-FeaturePlot(seuratObj, 'GPR37')
+
+x <- 0
+
+x <- x + 1
+FeaturePlot(seuratObj, mgcMarkers[x])
+
+FeaturePlot(seuratObj, 'SLITRK2')
+

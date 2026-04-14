@@ -1,4 +1,3 @@
-
 mgcMarkers <- c('AQP4', 'GPR37', 'COL5A1', 'COL6A1', 'TLR2', 'GLUL','CLU', 
                 'S100A16', 'SOX2', 'APOE', 'DBI', 'GNAI2', 'COL11A1',
                 'PRDX6', 'SLC1A3', 'HES1', 'KIT', 'CRB1','ANXA4',
@@ -7,3 +6,6 @@ mgcMarkers <- c('AQP4', 'GPR37', 'COL5A1', 'COL6A1', 'TLR2', 'GLUL','CLU',
                 'CROT','COL9A1','COL4A2','COL2A1','COL1A1','VSX2','DKK3',
                 'RLBP1','DAPL1','SIX3OS1','CAR14','CRYM','KCNJ2','ZBED4','CA2',
                 'ATG4B','ITM2B','SPC25','KCNJ10')
+
+rpcMarkers <- c('PAX6', 'CALB2', 'SIX6', 'SIX3', 'NEFH', 'LGR5', 
+                'SAG', 'RAX', 'NOTCH1', 'HES1', 'MSI1', 'SOX9', 'RHO')
