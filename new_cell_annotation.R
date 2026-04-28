@@ -40,7 +40,7 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'TRPM1/CD96/TYR',
                                    'SFRP2/DAPL1/HES1',
                                    'PDE6H/MPP4/RIMS2',
-                                   'RLBP1/TF/WIF1',
+                                   'RLBP1/TF/CD44',
                                    'PRDM13/TFAP2A/TFAP2B',
                                    'PRDM1/VXN/LHX4',
                                    'CA10/CSMD3/VSX1',
@@ -54,7 +54,7 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'NEUROD6/NEUROD2/POU3F3'))
 
 v <- clusterMean(seuratObj, 
-                 c('SFRP2', 'DAPL1'),
+                 c('SFRP2', 'DAPL1', 'HES1'),
                  c(43, 2, 17, 21, 24, 14, 42, 45, 19, 30, 5, 10, 15, 33, 9, 25, 23, 46, 27, 34))
 View(v)
 
@@ -63,10 +63,18 @@ w <- clusterMean(seuratObj,
                  c(43, 2, 17, 21, 24, 14, 42, 45, 19, 30, 5, 10, 15, 33, 9, 25, 23, 46, 27, 34))
 View(w)
 
-x <- 0
+w <- clusterMean(seuratObj, 
+                 c('RLBP1', 'TF', 'CD44', 'SLITRK2'),
+                 c(43, 2, 17, 21, 24, 14, 42, 45, 19, 30, 5, 10, 15, 33, 9, 25, 23, 46, 27, 34))
+View(w)
+
+a <- FindMarkers(seuratObj, ident.1=33, only.pos=TRUE, min.diff.pct=0.15, logfc.threshold=1.5)
+
+a <- FindMarkers(seuratObj, ident.1=33, features=c('RLBP1', 'TF', 'CD44', 'SLITRK2'))
 
 x <- x + 1
-FeaturePlot(seuratObj, mgcMarkers[x])
+FeaturePlot(seuratObj, rpcMarkers[x])
 
 FeaturePlot(seuratObj, 'SLITRK2')
 
+DimPlot(seuratObj, label=T) + NoLegend()

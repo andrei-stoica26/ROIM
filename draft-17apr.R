@@ -1,4 +1,5 @@
-unique(miniSeurat$orig.ident)
+seuratObj <- qs_read('annotatedSeurat.qs2')
+
 df <- scColPairPercs(seuratObj, 'orig.ident', 'celltype')
 df$orig.ident <- factor(df$orig.ident, 
                         levels=c('Control', '0h', '12h', '24h'))
@@ -51,6 +52,8 @@ p <- centerTitle(p, 'Changes in cell type representation')
 
 p
 
+devPlot(p)
+
 ################################################################################
 
 df <- scColPairRatio(seuratObj, 'orig.ident', 'celltype')
@@ -92,3 +95,5 @@ p <- ggplot(df, aes(x = orig.ident, y = celltype, label = significant)) +
     theme(axis.title = element_blank()) +
     labs(fill='Observed over\nexpected ratio')
 p <- centerTitle(p, 'Observed over expected ratio')
+
+devPlot(p)
