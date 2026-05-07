@@ -9,6 +9,7 @@ Results
 *.txt
 *.pdf
 *.csv
+*.rda
 Figures
 Oldfiles
 plot_changes.R
