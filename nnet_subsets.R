@@ -23,10 +23,13 @@ prepareNet <- function(obj, selGenes){
 
 createNetplots <- function(obj, metacells=seq(20)){
     cut <- mean(apply(obj@misc$NNet.mod$meta.network$p.val[,,1], 1, max))
-    plots <- lapply(metacells, function(i)
+    message('Creating network plots for Seurat object...')
+    plots <- lapply(metacells, function(i){
+        message('Plotting metacell ', i, '...')
         visualise.network(obj, i, meta.network = TRUE, cutoff = cut,
                           radius = c(.4,.7,.85,1), pie.radius = .04,
-                          text.size = 3))
+                          text.size = 3)
+    })
     return(plots)
 }
 
