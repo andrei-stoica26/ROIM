@@ -14,7 +14,7 @@ obj <- obj |>
     prepare.reg(predictors = genes$tfs,      # local variance scaffolding
                 responses  = genes$targets)
 
-selGenes <- c('NFIA', 'NFIX', 'SOX2','LHX2', 'HMGA1v', 'ASCL1', 'SMARCA5', 'YAP1',
+selGenes <- c('NFIA', 'NFIX', 'SOX2','LHX2', 'HMGA1', 'ASCL1', 'SMARCA5', 'YAP1',
            'SOX9', 'STAT3', 'E2F3', 'FOXN4', 'MYB', 'FOXO3', 'SOX5', 'NFIB')
 
 obj <- run.nn.reg(obj, 

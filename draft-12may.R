@@ -107,4 +107,3 @@ p <- visualise.network(obj, x, meta.network = TRUE, cutoff = cut,
 p <- centerTitle(p, paste0('Regulatory network - Metacell ', x))
 devPlot(p)
 
-
