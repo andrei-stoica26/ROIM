@@ -2,6 +2,7 @@ library(Seurat)
 library(qs2)
 library(ggplot2)
 library(hammers)
+library(tradeSeq)
 
 source('nnet_subsets.R')
 
@@ -20,8 +21,8 @@ selGenes <- c('NFIA', 'NFIX', 'SOX2','LHX2', 'HMGA1', 'ASCL1', 'SMARCA5', 'YAP1'
               'SOX9', 'STAT3', 'E2F3', 'FOXN4', 'MYB', 'FOXO3', 'SOX5', 'NFIB')
 
 netSeurats <- lapply(seurats, function(obj) prepareNet(obj, selGenes))
-
 qs_save(netSeurats, 'netSeurats.qs2')
+
 netPlots <- mapply(function(x, y) createNetplots(x, y),
                    netSeurats, 
                    list(seq(20),
@@ -30,3 +31,20 @@ netPlots <- mapply(function(x, y) createNetplots(x, y),
                         c(3, 4, 6, 14, 20)),
                    SIMPLIFY=FALSE)
 
+
+gam <- qs_read('mgcGam.qs2')
+res <- associationTest(gam)
+res <- res[order(res$waldStat, decreasing=TRUE),]
+topGenes <- rownames(subset(res, waldStat > 1000))
+
+netSeuratsTradeseq <- lapply(seurats, function(obj) prepareNet(obj, topGenes))
+
+netPlots <- mapply(function(x, y) createNetplots(x, y),
+                   netSeuratsTradeseq, 
+                   list(seq(20),
+                        seq(20),
+                        seq(20),
+                        seq(20)),
+                   SIMPLIFY=FALSE)
+
+p <- createNetplots(netSeuratsTradeseq[[4]], seq(20))
