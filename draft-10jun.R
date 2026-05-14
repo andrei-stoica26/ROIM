@@ -40,6 +40,9 @@ res <- associationTest(gam)
 res <- res[order(res$waldStat, decreasing=TRUE),]
 topGenes <- rownames(subset(res, waldStat > 1000))
 
+
+set.seed(123)
+
 obj <- seurats[['0h']]
 net0h <- prepareNet(obj, topGenes)
 
@@ -55,12 +58,18 @@ netCtr <- prepareNet(obj, topGenes)
 netSeuratsTradeseq <- list(net0h, net12h, net24h, netCtr)
 names(netSeuratsTradeseq) <- names(seurats)
 
+rm(net0h)
+rm(net12h)
+rm(net24h)
+rm(netCtr)
+
+
 netPlots <- mapply(function(x, y) createNetplots(x, y),
                    netSeuratsTradeseq, 
                    list(seq(20),
                         seq(20),
                         seq(20),
-                        seq(20)),
+                        c(seq(16), seq(18, 20))),
                    SIMPLIFY=FALSE)
 
 netPlots[['0h']][[20]]
