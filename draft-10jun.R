@@ -30,14 +30,30 @@ netPlots <- mapply(function(x, y) createNetplots(x, y),
                         seq(20),
                         c(3, 4, 6, 14, 20)),
                    SIMPLIFY=FALSE)
+################################################################################
 
+miniSeurat <- qs_read('miniSeurat.qs2')
+seurats <- SplitObject(miniSeurat, 'orig.ident')
 
 gam <- qs_read('mgcGam.qs2')
 res <- associationTest(gam)
 res <- res[order(res$waldStat, decreasing=TRUE),]
 topGenes <- rownames(subset(res, waldStat > 1000))
 
-netSeuratsTradeseq <- lapply(seurats, function(obj) prepareNet(obj, topGenes))
+obj <- seurats[['0h']]
+net0h <- prepareNet(obj, topGenes)
+
+obj <- seurats[['12h']]
+net12h <- prepareNet(obj, topGenes)
+
+obj <- seurats[['24h']]
+net24h <- prepareNet(obj, topGenes)
+
+obj <- seurats[['Control']]
+netCtr <- prepareNet(obj, topGenes)
+
+netSeuratsTradeseq <- list(net0h, net12h, net24h, netCtr)
+names(netSeuratsTradeseq) <- names(seurats)
 
 netPlots <- mapply(function(x, y) createNetplots(x, y),
                    netSeuratsTradeseq, 
@@ -47,4 +63,8 @@ netPlots <- mapply(function(x, y) createNetplots(x, y),
                         seq(20)),
                    SIMPLIFY=FALSE)
 
-p <- createNetplots(netSeuratsTradeseq[[4]], seq(20))
+netPlots[['0h']][[20]]
+netPlots[['12h']][[20]]
+netPlots[['24h']][[20]]
+netPlots[['Control']][[20]]
+dev.off()
