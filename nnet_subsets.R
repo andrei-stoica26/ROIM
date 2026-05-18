@@ -28,7 +28,7 @@ createNetplots <- function(obj, metacells=seq(20)){
         message('Plotting metacell ', i, '...')
         visualise.network(obj, i, meta.network = TRUE, cutoff = cut,
                           radius = c(.4,.7,.85,1), pie.radius = .04,
-                          text.size = 3)
+                          text.size = 2.5)
     })
     return(plots)
 }

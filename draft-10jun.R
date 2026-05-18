@@ -1,8 +1,10 @@
 library(Seurat)
+library(Signac)
 library(qs2)
 library(ggplot2)
 library(hammers)
 library(tradeSeq)
+library(CSOA)
 
 source('nnet_subsets.R')
 
@@ -13,6 +15,24 @@ DimPlot(seuratObj, group.by='celltype', label=TRUE, repel=TRUE, label.size=3) + 
 
 
 miniSeurat <- qs_read('miniSeurat.qs2')
+allMarkers <- FindAllMarkers(miniSeurat, group.by='orig.ident', only.pos=T, 
+                             logfc.threshold=1.5, min.pct=0.2)
+
+miniSeurat$orig.ident <- factor(miniSeurat$orig.ident, levels=c('Control', '0h', '12h', '24h'))
+p <- DoHeatmap(miniSeurat, rownames(allMarkers), group.by='orig.ident', angle=0, vjust=0.2)
+devPlot(p)
+
+featureWes(miniSeurat, 'FTH1', idClass='orig.ident')
+
+gam <- qs_read('mgcGam.qs2')
+res <- associationTest(gam)
+res <- res[order(res$waldStat, decreasing=TRUE),]
+topGenes <- rownames(subset(res, waldStat > 500))
+p <- DoHeatmap(miniSeurat, topGenes, group.by='orig.ident', angle=0, vjust=0.2)
+devPlot(p)
+
+################################################################################
+
 seurats <- SplitObject(miniSeurat, 'orig.ident')
 
 names(seurats)
@@ -40,7 +60,6 @@ res <- associationTest(gam)
 res <- res[order(res$waldStat, decreasing=TRUE),]
 topGenes <- rownames(subset(res, waldStat > 1000))
 
-
 set.seed(123)
 
 obj <- seurats[['0h']]
@@ -63,7 +82,6 @@ rm(net12h)
 rm(net24h)
 rm(netCtr)
 
-
 netPlots <- mapply(function(x, y) createNetplots(x, y),
                    netSeuratsTradeseq, 
                    list(seq(20),
@@ -73,7 +91,8 @@ netPlots <- mapply(function(x, y) createNetplots(x, y),
                    SIMPLIFY=FALSE)
 
 netPlots[['0h']][[20]]
-netPlots[['12h']][[20]]
-netPlots[['24h']][[20]]
-netPlots[['Control']][[20]]
-dev.off()
+netPlots[['12h']][[8]]
+netPlots[['24h']][[3]]
+netPlots[['Control']][[19]]
+
+
