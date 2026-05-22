@@ -5,6 +5,7 @@ library(ggplot2)
 library(hammers)
 library(tradeSeq)
 library(CSOA)
+library(henna)
 
 source('nnet_subsets.R')
 
@@ -90,9 +91,15 @@ netPlots <- mapply(function(x, y) createNetplots(x, y),
                         c(seq(16), seq(18, 20))),
                    SIMPLIFY=FALSE)
 
-netPlots[['0h']][[20]]
-netPlots[['12h']][[8]]
-netPlots[['24h']][[3]]
-netPlots[['Control']][[19]]
+cond <- 'Control'
 
+conds <- c('Control', '0h', '12h', '24h')
+cells <- list(seq(19), seq(20), seq(20), seq(20))
 
+invisible(mapply(function(x, y){
+    for (i in y){
+        p <- netPlots[[x]][[i]]
+        p <- centerTitle(p, paste0(x, ' - Metacell ', i))
+        devPlot(p)
+    }
+}, conds, cells, SIMPLIFY=FALSE))

@@ -30,7 +30,6 @@ write_summaries <- function(seuratObj){
     tables <- mapply(function(type, shortType){
         subSeurat <- subset(seuratObj, celltype==type)
         df <- createFractionTable(subSeurat, shortType)
-        message('Saving results...')
         write.csv(df, paste0('exp_', type, '.csv'))
         return(df)
     }, types, shortTypes, SIMPLIFY=FALSE)
