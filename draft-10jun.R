@@ -6,7 +6,7 @@ library(hammers)
 library(tradeSeq)
 library(CSOA)
 library(henna)
-
+library(scLang)
 source('nnet_subsets.R')
 
 seuratObj <- qs_read('annotatedSeurat.qs2')
@@ -103,3 +103,33 @@ invisible(mapply(function(x, y){
         devPlot(p)
     }
 }, conds, cells, SIMPLIFY=FALSE))
+
+featureWes(miniSeurat, 'TTR', idClass='orig.ident')
+
+
+################################################################################
+
+source('csoa_networks.R')
+
+miniSeurat <- qs_read('miniSeurat.qs2')
+a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="Control")
+p <- volcanoPlot(a, labLogFCThr = 1,  labPvalThr=1e-50)
+p
+a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="0h")
+p <- volcanoPlot(a)
+a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="12h")
+p <- volcanoPlot(a)
+a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="24h")
+p <- volcanoPlot(a)
+devPlot(p)
+
+csoaNets <- buildCSOANetworks(miniSeurat)
+qs_save(csoaNets,'csoaNets.qs2')
+
+
+filteredNets <- lapply(csoaNets, function(x) breakWeakTies(x, cutoff=0.05, doConnComp=F))
+
+
+geneRadialPlot(filteredNets[[3]], groupLegendTitle='Component')
+
+?geneRadialPlot
