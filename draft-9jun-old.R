@@ -112,24 +112,33 @@ featureWes(miniSeurat, 'TTR', idClass='orig.ident')
 source('csoa_networks.R')
 
 miniSeurat <- qs_read('miniSeurat.qs2')
-a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="Control")
-p <- volcanoPlot(a, labLogFCThr = 1,  labPvalThr=1e-50)
+
+markersCtr <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="Control")
+
+markers0h <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="0h")
+p <- volcanoPlot(markers0h, "Top differentially expressed genes - 0 hours",
+                 labLogFCThr = 1,  labPvalThr=1e-50)
 p
-a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="0h")
-p <- volcanoPlot(a)
-a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="12h")
-p <- volcanoPlot(a)
-a <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="24h")
-p <- volcanoPlot(a)
-devPlot(p)
+
+markers12h <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="12h")
+p <- volcanoPlot(markers12h, "Top differentially expressed genes - 12 hours",
+                 labLogFCThr = 0.8,  labPvalThr=1e-20)
+p
+
+markers24h <- FindMarkers(miniSeurat, group.by="orig.ident", ident.1="24h")
+p <- volcanoPlot(markers24h, "Top differentially expressed genes - 24 hours",
+                 labLogFCThr = 1,  labPvalThr=1e-20)
+p
+
 
 csoaNets <- buildCSOANetworks(miniSeurat)
 qs_save(csoaNets,'csoaNets.qs2')
+csoaNets <- qs_read('csoaNets.qs2')
 
 
 filteredNets <- lapply(csoaNets, function(x) breakWeakTies(x, cutoff=0.05, doConnComp=F))
 
+networkPlot(filteredNets[[1]])
+geneRadialPlot(filteredNets[[4]], groupLegendTitle='Component')
 
-geneRadialPlot(filteredNets[[3]], groupLegendTitle='Component')
-
-?geneRadialPlot
+DimPlot(miniSeurat, group.by='orig.ident')
