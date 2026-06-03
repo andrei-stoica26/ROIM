@@ -42,7 +42,13 @@ write_summaries <- function(seuratObj){
 seuratObj <- qs_read('annotatedSeurat.qs2')
 res <- write_summaries(seuratObj)
 
+################################################################################
+miniSeurat <- qs_read('miniSeurat.qs2')
+for (id in c('Control', '0h', '12h', '24h')){
+    m <- FindMarkers(miniSeurat, group.by='orig.ident', ident.1=id, only.pos=TRUE)
+    write.csv(m, paste0('markers_', id, '.csv'))
+}
 
-
+View(m)
 
 

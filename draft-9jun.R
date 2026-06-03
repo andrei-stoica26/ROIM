@@ -11,6 +11,7 @@ library(enResUtils)
 
 source('csoa_networks.R')
 source('visualization.R')
+source('nnet_subsets.R')
 
 seuratObj <- qs_read('annotatedSeurat.qs2')
 
@@ -145,4 +146,21 @@ devPlot(p)
 
 m <- genesER(overlapGenes(filteredNets[[3]]), 'human')
 p <- newCnetplot(m, "Top enriched GO terms - 24 hours")
+devPlot(p)
+
+################################################################################
+miniSeurat <- qs_read('miniSeurat.qs2')
+
+gam <- qs_read('mgcGam.qs2')
+res <- associationTest(gam)
+res <- res[order(res$waldStat, decreasing=TRUE),]
+qs_save(res, 'assocTestGam.qs2')
+
+filteredRes <- subset(res, waldStat>200 & meanLogFC > 1)
+View(filteredRes)
+topGenes <- rownames(subset(res, waldStat > 500))
+
+miniSeurat$orig.ident <- factor(miniSeurat$orig.ident, levels=c('Control', '0h', '12h', '24h'))
+p <- DoHeatmap(miniSeurat, rownames(filteredRes), group.by='orig.ident', angle=0, vjust=0.2)
+p <- centerTitle(p, "Top differentially expressed genes")
 devPlot(p)
