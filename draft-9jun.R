@@ -149,18 +149,53 @@ p <- newCnetplot(m, "Top enriched GO terms - 24 hours")
 devPlot(p)
 
 ################################################################################
+
 miniSeurat <- qs_read('miniSeurat.qs2')
+seurats <- SplitObject(miniSeurat, 'orig.ident')
 
 gam <- qs_read('mgcGam.qs2')
 res <- associationTest(gam)
 res <- res[order(res$waldStat, decreasing=TRUE),]
-qs_save(res, 'assocTestGam.qs2')
+topGenes <- rownames(subset(res, waldStat > 1000))
 
-filteredRes <- subset(res, waldStat>200 & meanLogFC > 1)
-View(filteredRes)
-topGenes <- rownames(subset(res, waldStat > 500))
+set.seed(123)
 
-miniSeurat$orig.ident <- factor(miniSeurat$orig.ident, levels=c('Control', '0h', '12h', '24h'))
-p <- DoHeatmap(miniSeurat, rownames(filteredRes), group.by='orig.ident', angle=0, vjust=0.2)
-p <- centerTitle(p, "Top differentially expressed genes")
-devPlot(p)
+obj <- seurats[['0h']]
+net0h <- prepareNet(obj, topGenes)
+
+obj <- seurats[['12h']]
+net12h <- prepareNet(obj, topGenes)
+
+obj <- seurats[['24h']]
+net24h <- prepareNet(obj, topGenes)
+
+obj <- seurats[['Control']]
+netCtr <- prepareNet(obj, topGenes)
+
+netSeuratsTradeseq <- list(net0h, net12h, net24h, netCtr)
+names(netSeuratsTradeseq) <- names(seurats)
+
+rm(net0h)
+rm(net12h)
+rm(net24h)
+rm(netCtr)
+
+netPlots <- mapply(function(x, y) createNetplots(x, y),
+                   netSeuratsTradeseq, 
+                   list(seq(20),
+                        seq(20),
+                        seq(20),
+                        c(seq(16), seq(18, 20))),
+                   SIMPLIFY=FALSE)
+
+
+conds <- c('Control', '0h', '12h', '24h')
+cells <- list(seq(19), seq(20), seq(20), seq(20))
+
+invisible(mapply(function(x, y){
+    for (i in y){
+        p <- netPlots[[x]][[i]]
+        p <- centerTitle(p, paste0(x, ' - Metacell ', i))
+        devPlot(p)
+    }
+}, conds, cells, SIMPLIFY=FALSE))

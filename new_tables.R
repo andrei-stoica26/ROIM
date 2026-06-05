@@ -49,6 +49,4 @@ for (id in c('Control', '0h', '12h', '24h')){
     write.csv(m, paste0('markers_', id, '.csv'))
 }
 
-View(m)
-
 
