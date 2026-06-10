@@ -29,12 +29,12 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'Bipolar cells',
                                    'Gliogenic progenitors',
                                    'Proliferative RPC',
-                                   'ONECUT1+ horizontal cells',
+                                   'Horizontal cells',
                                    'Neurogenic progenitors',
-                                   'HTR2C+ retinal ganglion cells',
+                                   'HTR2C+ amacrine-like cells',
                                    'ISL1+ retinal ganglion cells',
-                                   'ATF5+ horizontal cells',
-                                   'NEUROD6+ retinal ganglion cells'),
+                                   'ATF5+ horizontal-like cells',
+                                   'TBR1+ retinal ganglion-like cells'),
                                  'topMarkers',
                                  c('NRL/NR2E3/ROM1',
                                    'TRPM1/CD96/TYR',
@@ -48,10 +48,22 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'TOP2A/CENPF/MKI67',
                                    'ONECUT1/ONECUT2/ONECUT3',
                                    'HES6/ATOH7/INSM1',
-                                   'HTR2C/FYB2/EMX2',
+                                   'HTR2C/GRM8/FYB2',
                                    'ISL1/POU4F1/POU4F2',
                                    'ATF5/UNC5B/GBE1',
-                                   'NEUROD6/NEUROD2/POU3F3'))
+                                   'TBR1/NTRK3/LRRC7'))
+
+DimPlot(seuratObj, group.by='celltype', label=T, repel=T, label.size=3) + NoLegend()
+
+a <- FindMarkers(seuratObj, group.by='celltype', ident.1='Photoreceptor precursors',
+                 ident.2 = 'ATF5+ horizontal-like cells', only.pos=TRUE, logfc.threshold=1)
+
+View(a)
+b <- FindMarkers(seuratObj, group.by='celltype', ident.2='Photoreceptor precursors',
+                 ident.1 = 'ATF5+ horizontal-like cells', only.pos=TRUE, logfc.threshold=1)
+
+View(b)
+
 
 v <- clusterMean(seuratObj, 
                  c('SFRP2', 'DAPL1', 'HES1'),
@@ -68,13 +80,11 @@ w <- clusterMean(seuratObj,
                  c(43, 2, 17, 21, 24, 14, 42, 45, 19, 30, 5, 10, 15, 33, 9, 25, 23, 46, 27, 34))
 View(w)
 
-a <- FindMarkers(seuratObj, ident.1=33, only.pos=TRUE, min.diff.pct=0.15, logfc.threshold=1.5)
+v
 
-a <- FindMarkers(seuratObj, ident.1=33, features=c('RLBP1', 'TF', 'CD44', 'SLITRK2'))
+a <- FindMarkers(seuratObj, ident.1=42, logfc.threshold=1, only.pos=TRUE)
+View(a)
 
-x <- x + 1
-FeaturePlot(seuratObj, rpcMarkers[x])
-
-FeaturePlot(seuratObj, 'SLITRK2')
+FeaturePlot(seuratObj, 'DLGAP1')
 
 DimPlot(seuratObj, label=T) + NoLegend()
