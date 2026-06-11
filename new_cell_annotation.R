@@ -32,7 +32,7 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'Horizontal cells',
                                    'Neurogenic progenitors',
                                    'HTR2C+ amacrine-like cells',
-                                   'ISL1+ retinal ganglion cells',
+                                   'Retinal ganglion cells',
                                    'ATF5+ horizontal-like cells',
                                    'TBR1+ retinal ganglion-like cells'),
                                  'topMarkers',
@@ -52,6 +52,8 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'ISL1/POU4F1/POU4F2',
                                    'ATF5/UNC5B/GBE1',
                                    'TBR1/NTRK3/LRRC7'))
+
+qs_save(seuratObj, 'annotatedSeuratNew.qs2')
 
 DimPlot(seuratObj, group.by='celltype', label=T, repel=T, label.size=3) + NoLegend()
 
