@@ -1,6 +1,11 @@
 library(Seurat)
 library(Signac)
 library(qs2)
+library(hammers)
+library(henna)
+library(scLang)
+library(ggplot2)
+library(ggalluvial)
 
 seuratObj <- qs_read('annotatedSeuratNew.qs2')
 
@@ -14,11 +19,11 @@ seuratObj$celltype <- factor(seuratObj$celltype,
                                       'Rods',
                                       'Bipolar cells',
                                       'Amacrine cells',
+                                      'HTR2C+ amacrine-like cells',
                                       'Cones',
                                       'Retinal ganglion cells',
-                                      'HTR2C+ amacrine-like cells',
                                       'TBR1+ retinal ganglion-like cells',
-                                      'ATF5+ horizontal-like cells',
+                                      'ATF5+ amacrine-like cells',
                                       'Horizontal cells',
                                       'RPE cells'))
 
@@ -31,11 +36,11 @@ celltypeCols <- c('Muller glial cells' = rgb(247/255,147/255,30/255),
                   'Rods' = rgb(169/255,169/255,169/255), 
                   'Bipolar cells' = rgb(163/255,165/255,0/255), 
                   'Amacrine cells' = rgb(157/255,115/255,194/255), 
+                  'HTR2C+ amacrine-like cells' = rgb(200/255,125/255,198/255),
                   'Cones' = rgb(230/255,134/255,201/255), 
                   'Retinal ganglion cells' = rgb(140/255,198/255,63/255),
-                  'HTR2C+ amacrine-like cells' = rgb(192/255,193/255,48/255), 
                   'TBR1+ retinal ganglion-like cells' = rgb(74/255,176/255,91/255), 
-                  'ATF5+ horizontal-like cells' = rgb(97/255,156/255,255/255), 
+                  'ATF5+ amacrine-like cells' = rgb(97/255,156/255,255/255), 
                   'Horizontal cells' = rgb(3/255,161/255,198/255), 
                   'RPE cells'= rgb(129/255,70/255,58/255))
 
@@ -49,7 +54,11 @@ devPlot(p)
 
 ################################################################################
 
+
 df <- scColPairPercs(seuratObj, 'orig.ident', 'celltype')
+
+df$orig.ident <- factor(df$orig.ident, 
+                        levels=c('Control', '0h', '12h', '24h'))
 p <- ggplot(df, aes(x=orig.ident, 
                     y=perc, 
                     fill=celltype, 

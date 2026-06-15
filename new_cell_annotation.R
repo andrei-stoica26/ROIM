@@ -33,7 +33,7 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'Neurogenic progenitors',
                                    'HTR2C+ amacrine-like cells',
                                    'Retinal ganglion cells',
-                                   'ATF5+ horizontal-like cells',
+                                   'ATF5+ amacrine-like cells',
                                    'TBR1+ retinal ganglion-like cells'),
                                  'topMarkers',
                                  c('NRL/NR2E3/ROM1',
@@ -50,7 +50,7 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'HES6/ATOH7/INSM1',
                                    'HTR2C/GRM8/FYB2',
                                    'ISL1/POU4F1/POU4F2',
-                                   'ATF5/UNC5B/GBE1',
+                                   'ATF5/UNC5B/DLGAP1',
                                    'TBR1/NTRK3/LRRC7'))
 
 qs_save(seuratObj, 'annotatedSeuratNew.qs2')
@@ -87,6 +87,6 @@ v
 a <- FindMarkers(seuratObj, ident.1=42, logfc.threshold=1, only.pos=TRUE)
 View(a)
 
-FeaturePlot(seuratObj, 'DLGAP1')
+FeaturePlot(seuratObj, 'GBE1')
 
 DimPlot(seuratObj, label=T) + NoLegend()
