@@ -26,7 +26,7 @@ findEnrichedMotifs <- function(seuratObj, id1){
         only.pos = TRUE,
     )
     topDaPeaks <- rownames(daPeaks[daPeaks$p_val < 0.005 & 
-                                       daPeaks$pct.1 > 0.2, ])
+                                       daPeaks$pct.1 > 0.1, ])
     enrichedMotifs <- FindMotifs(miniSeurat, topDaPeaks)
     return(enrichedMotifs)
 }
@@ -34,5 +34,5 @@ findEnrichedMotifs <- function(seuratObj, id1){
 ################################################################################
 
 miniSeurat <- qs_read('miniSeuratWithMotifs.qs2')
-enrichedMotifs <- findEnrichedMotifs(miniSeurat, 'Control')
+enrichedMotifs <- findEnrichedMotifs(miniSeurat, '24h')
 MotifPlot(miniSeurat, head(rownames(enrichedMotifs)))
