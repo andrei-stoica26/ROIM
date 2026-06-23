@@ -24,16 +24,16 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'Retinal progenitor cells',
                                    'Cones',
                                    'Muller glial cells',
-                                   'Amacrine cells',
+                                   'NRP1+ amacrine cells',
                                    'Photoreceptor precursors',
                                    'Bipolar cells',
                                    'Gliogenic progenitors',
                                    'Proliferative RPC',
                                    'Horizontal cells',
                                    'Neurogenic progenitors',
-                                   'HTR2C+ amacrine-like cells',
+                                   'HTR2C+ amacrine cells',
                                    'ISL1+ retinal ganglion cells',
-                                   'ATF5+ amacrine-like cells',
+                                   'ATF5+ amacrine cells',
                                    'TBR1+ retinal ganglion cells'),
                                  'topMarkers',
                                  c('NRL/NR2E3/ROM1',
@@ -41,7 +41,7 @@ seuratObj <- addMetadataCategory(seuratObj, 'seurat_clusters', 'celltype',
                                    'SFRP2/DAPL1/HES1',
                                    'PDE6H/MPP4/RIMS2',
                                    'RLBP1/TF/CD44',
-                                   'PRDM13/TFAP2A/TFAP2B',
+                                   'PRDM13/TFAP2A/NRP1',
                                    'PRDM1/VXN/LHX4',
                                    'CA10/CSMD3/VSX1',
                                    'MOXD1/FLT1/MYO3A',
@@ -57,10 +57,15 @@ qs_save(seuratObj, 'annotatedSeuratNew.qs2')
 
 DimPlot(seuratObj, group.by='celltype', label=T, repel=T, label.size=3) + NoLegend()
 
-a <- FindMarkers(seuratObj, group.by='celltype', ident.1='Photoreceptor precursors',
-                 ident.2 = 'ATF5+ horizontal-like cells', only.pos=TRUE, logfc.threshold=1)
+a <- FindMarkers(seuratObj, group.by='celltype', ident.1='NRP1+ amacrine cells',
+                 only.pos=TRUE, logfc.threshold=3)
 
 View(a)
+b <- FindMarkers(seuratObj, group.by='celltype', ident.1='ATF5+ amacrine cells',
+                  only.pos=TRUE, logfc.threshold=3)
+
+View(b)
+
 b <- FindMarkers(seuratObj, group.by='celltype', ident.2='Photoreceptor precursors',
                  ident.1 = 'ATF5+ horizontal-like cells', only.pos=TRUE, logfc.threshold=1)
 
@@ -89,6 +94,6 @@ View(a)
 
 FindMarkers(seuratObj, ident.1=44, features=c('TBR1', 'NEUROD2'))
             
-FeaturePlot(seuratObj, 'BNC2')
+FeaturePlot(seuratObj, 'NRP1')
 
 DimPlot(seuratObj, label=T) + NoLegend()
