@@ -6,6 +6,9 @@ library(henna)
 library(scLang)
 library(ggplot2)
 library(ggalluvial)
+library(CSOA)
+
+source('nnet_subsets.R')
 
 seuratObj <- qs_read('annotatedSeuratNew.qs2')
 
@@ -52,6 +55,17 @@ p <- DimPlot(seuratObj, group.by='celltype', cols=celltypeCols) +
 p <- centerTitle(p, 'Cell type annotation')
 devPlot(p)
 
+p <- featureWes(seuratObj, 'TBR1', idClass='celltype', repel=TRUE)
+devPlot(p)
+
+p <- featureWes(seuratObj, 'DLGAP1', idClass='celltype', repel=TRUE)
+devPlot(p)
+
+p <- featureWes(seuratObj, 'ATF5', idClass='celltype', repel=TRUE)
+devPlot(p)
+
+p <- featureWes(seuratObj, 'HTR2C', idClass='celltype', repel=TRUE)
+devPlot(p)
 ################################################################################
 
 
@@ -71,3 +85,43 @@ p <- ggplot(df, aes(x=orig.ident,
 p <- centerTitle(p, 'Changes in cell type representation')
 
 devPlot(p)
+
+################################################################################
+
+set.seed(123)
+
+miniSeurat <- qs_read('miniSeurat.qs2')
+seurats <- SplitObject(miniSeurat, 'orig.ident')
+
+selGenes <- c('NFIA', 'NFIX', 'SOX2','LHX2', 'HMGA1', 'ASCL1', 'SMARCA5', 'YAP1',
+              'SOX9', 'STAT3', 'E2F3', 'FOXN4', 'MYB', 'FOXO3', 'SOX5', 'NFIB')
+
+obj <- seurats[['0h']]
+net0h <- prepareNet(obj, selGenes)
+
+obj <- seurats[['12h']]
+net12h <- prepareNet(obj, selGenes)
+
+obj <- seurats[['24h']]
+net24h <- prepareNet(obj, selGenes)
+
+obj <- seurats[['Control']]
+netCtr <- prepareNet(obj, selGenes)
+
+netSeurats <- list(net0h, net12h, net24h, netCtr)
+names(netSeurats) <- names(seurats)
+
+rm(net0h)
+rm(net12h)
+rm(net24h)
+rm(netCtr)
+
+v[[6]]
+v <- createNetplots(netSeurats[[4]], c(seq(2, 5), 7, 9))
+netPlots <- mapply(function(x, y) createNetplots(x, y),
+                   netSeurats, 
+                   list(seq(20),
+                        seq(19),
+                        seq(20),
+                        c(seq(2, 5), 7, 9)),
+                   SIMPLIFY=FALSE)
